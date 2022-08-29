@@ -1,0 +1,164 @@
+C51 COMPILER V9.52.0.0   EEPROM                                                            08/29/2022 18:00:58 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE EEPROM
+OBJECT MODULE PLACED IN .\Objects\eeprom.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE eeprom.c BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\eeprom.lst) TABS(2) 
+                    -OBJECT(.\Objects\eeprom.obj)
+
+line level    source
+
+   1          #include<reg51.h>
+   2          #include"header.h"
+   3          //#include"types.h"
+   4          sbit sda=P2^4;
+   5          sbit scl=P2^5;
+   6          
+   7          
+   8          
+   9          void I2C_stop(void)
+  10          {
+  11   1        scl=0;
+  12   1        sda=0;
+  13   1        scl=1;
+  14   1        sda=1;
+  15   1      }
+  16          void I2C_byte_write(unsigned char dat)
+  17          {
+  18   1        signed char i;
+  19   1        for(i=7;i>=0;i--)
+  20   1        {
+  21   2          scl=0;
+  22   2          sda=((dat>>i)&1);
+  23   2          scl=1;
+  24   2        }
+  25   1      }
+  26          unsigned char I2C_byte_read(void)
+  27          {
+  28   1        unsigned char ch=0;
+  29   1        signed char i;
+  30   1        for(i=7;i>=0;i--)
+  31   1        {
+  32   2          scl=0;
+  33   2          scl=1;
+  34   2          if(sda==1)    
+  35   2          ch|=1<<i;//updating bit status to ch variable
+  36   2        }
+  37   1        return ch;
+  38   1      }
+  39          void i2c_slave_ack(void)
+  40          {
+  41   1        scl=0;
+  42   1        sda=1;
+  43   1        scl=1;
+  44   1        while(sda==1);//waiting
+  45   1      }
+  46          void i2c_noack(void)
+  47          {
+  48   1        scl=0;
+  49   1        sda=1;
+  50   1        scl=1;
+  51   1      }
+  52          /*void i2c_master_ack(void)
+  53          {
+  54            scl=0;//Master making the scl line low
+C51 COMPILER V9.52.0.0   EEPROM                                                            08/29/2022 18:00:58 PAGE 2   
+
+  55            sda=0;//master pulling the sda line low
+  56            scl=1;
+  57            scl=0;//Master has applied the clock pulse
+  58            sda=1;//Master releasing the sda line 
+  59          }*/
+  60          void i2c_device_byte_write(unsigned char sa,unsigned char buf_addr,unsigned char dat)
+  61          {
+  62   1        I2C_start();
+  63   1        I2C_byte_write(sa);
+  64   1        i2c_slave_ack();      
+  65   1        I2C_byte_write(buf_addr);
+  66   1        i2c_slave_ack();      
+  67   1        I2C_byte_write(dat);
+  68   1        i2c_slave_ack();      
+  69   1        I2C_stop();
+  70   1        delay_ms(10);
+  71   1      }
+  72          unsigned char i2c_device_byte_read(unsigned char sa,unsigned char buf_addr)
+  73          {
+  74   1        unsigned char ch;
+  75   1        I2C_start();
+  76   1        I2C_byte_write(sa);
+  77   1        i2c_slave_ack();      
+  78   1        I2C_byte_write(buf_addr);
+  79   1        i2c_slave_ack();      
+  80   1        I2C_start();
+  81   1        I2C_byte_write(sa|0x01);
+  82   1        i2c_slave_ack();
+  83   1        ch=I2C_byte_read();
+  84   1        
+  85   1        i2c_noack();        
+  86   1        I2C_stop();
+  87   1        delay_ms(10);
+  88   1        return(ch);
+  89   1      }
+  90          /*void i2c_device_seq_write(unsigned char sa,unsigned char buf_addr,unsigned char dat)
+  91          {
+  92            unsigned char i;
+  93            I2C_start();
+  94            I2C_byte_write(sa);
+  95            i2c_slave_ack();      
+  96            I2C_byte_write(buf_addr);
+  97            i2c_slave_ack();
+  98            for(i=1;i<9;i++)      
+  99            {
+ 100              I2C_byte_write(dat+i);
+ 101              i2c_slave_ack();      
+ 102            }
+ 103            I2C_stop();
+ 104            delay_ms(10);
+ 105          }
+ 106          unsigned char* i2c_device_seq_read(unsigned char sa,unsigned char buf_addr)
+ 107          {
+ 108            unsigned char a[10],i;
+ 109            I2C_start();
+ 110            I2C_byte_write(sa);
+ 111            i2c_slave_ack();      
+ 112            I2C_byte_write(buf_addr);
+ 113            i2c_slave_ack();      
+ 114            I2C_start();
+ 115            I2C_byte_write(sa|0x01);
+ 116            i2c_slave_ack();
+C51 COMPILER V9.52.0.0   EEPROM                                                            08/29/2022 18:00:58 PAGE 3   
+
+ 117            for(i=0;i<7;i++)
+ 118            {
+ 119              a[i]=I2C_byte_read();
+ 120              i2c_master_ack();
+ 121            }
+ 122            a[i]=I2C_byte_read();
+ 123            i2c_noack();        
+ 124            I2C_stop();
+ 125            delay_ms(10);
+ 126            return(a);
+ 127          }
+ 128          
+ 129          */
+ 130          void I2C_start(void)
+ 131          {
+ 132   1        scl=0;
+ 133   1        sda=1;
+ 134   1        scl=1;
+ 135   1        sda=0;
+ 136   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    196    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       6
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

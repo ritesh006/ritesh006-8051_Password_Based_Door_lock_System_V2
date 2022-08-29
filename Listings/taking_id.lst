@@ -1,0 +1,60 @@
+C51 COMPILER V9.52.0.0   TAKING_ID                                                         08/29/2022 18:00:58 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE TAKING_ID
+OBJECT MODULE PLACED IN .\Objects\taking_id.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE taking_id.c BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\taking_id.lst) TA
+                    -BS(2) OBJECT(.\Objects\taking_id.obj)
+
+line level    source
+
+   1          #include "header.h"
+   2          int i = 0;
+   3          signed char taking_id(void)
+   4          {
+   5   1        unsigned char user_id = 0;
+   6   1        
+   7   1          lcd_cmd(0x01);            /* clear screen */
+   8   1          lcd_cmd(0x80);            /* Select first row */
+   9   1          string_data("  SELECT ID FROM"); /* sending data to lcd */
+  10   1          lcd_cmd(0xC0);
+  11   1          string_data("      1 2 3"); 
+  12   1          delay_ms(900);            /* delay for two second */
+  13   1        
+  14   1          
+  15   1          lcd_cmd(0x01);                /* clear screen */
+  16   1          lcd_cmd(0x80);                /* Select first row */
+  17   1          string_data("    ENTER ID");  /* sending data to lcd */
+  18   1          delay_ms(100);                /* optional */
+  19   1          lcd_cmd(0xc0);                /* Set Cursor on 2nd line */
+  20   1          lcd_cmd(0x0f);                /* Cursor Blinking */
+  21   1      
+  22   1        for( i = 0; i < 7; i++)
+  23   1        {
+  24   2          lcd_cmd(0x14);                /* Cursor right shift by Seven times */ 
+  25   2        }
+  26   1        
+  27   1          row_Init();                 //Row initialization
+  28   1          while(Is_Keypressed());//waiting for sw press
+  29   1          user_id = key_Val();    /* storing user id to variable */
+  30   1          //lcd_cmd(0xC0);          /* set curser to second line */
+  31   1          lcd_data(user_id);     /* display id to lcd */
+  32   1          delay_ms(1000);
+  33   1          return user_id;
+  34   1          
+  35   1      
+  36   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    134    ----
+   CONSTANT SIZE    =     42    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

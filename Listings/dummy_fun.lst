@@ -1,0 +1,56 @@
+C51 COMPILER V9.60.0.0   DUMMY_FUN                                                         04/17/2022 13:39:16 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE DUMMY_FUN
+OBJECT MODULE PLACED IN .\Objects\dummy_fun.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE dummy_fun.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings
+                    -\dummy_fun.lst) TABS(2) OBJECT(.\Objects\dummy_fun.obj)
+
+line level    source
+
+   1          #include<reg51.h>
+   2          #include"header.h"
+   3          sbit in1 =P3^5;
+   4          sbit in2 =P3^6;
+   5          sbit buzzer =P3^7;
+   6          
+   7          void led_toggle(unsigned char ret1)
+   8          {
+   9   1        buzzer = 0;
+  10   1        
+  11   1       if(ret1==0)
+  12   1        {
+  13   2          in1=1;
+  14   2          in2=0;
+  15   2          delay_ms(1000);
+  16   2          in1=0;
+  17   2          in2=0;    
+  18   2        }
+  19   1            else
+  20   1            {
+  21   2              in1=0;
+  22   2              in2=1;
+  23   2              delay_ms(1000);
+  24   2              in1=0;
+  25   2              in2=0;
+  26   2              
+  27   2              buzzer = 1;
+  28   2              delay_ms(500);
+  29   2              buzzer = 0;
+  30   2            }
+  31   1        
+  32   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     48    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

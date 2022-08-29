@@ -1,0 +1,19 @@
+".\Objects\eeprom.obj",
+".\Objects\main.obj",
+".\Objects\lcd1.obj",
+".\Objects\delay.obj",
+".\Objects\keypad.obj",
+".\Objects\INT0.obj",
+".\Objects\edit_pass.obj",
+".\Objects\init_pass_read_eeprom.obj",
+".\Objects\init_pass_write_eeprom.obj",
+".\Objects\taking_id.obj",
+".\Objects\select_id.obj",
+".\Objects\welcome_Screen.obj",
+".\Objects\initialize_inturrupt.obj",
+".\Objects\motor.obj",
+".\Objects\enter_password.obj",
+".\Objects\system_block.obj",
+".\Objects\STARTUP.obj" 
+TO ".\Objects\i2c_new_interrupt" 
+PRINT(".\Listings\i2c_new_interrupt.m51")

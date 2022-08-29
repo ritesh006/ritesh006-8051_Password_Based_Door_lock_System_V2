@@ -1,0 +1,1 @@
+extern void ext_INT0(void) interrupt 0

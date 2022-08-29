@@ -1,0 +1,43 @@
+C51 COMPILER V9.52.0.0   WELCOME_SCREEN                                                    08/29/2022 18:00:59 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE WELCOME_SCREEN
+OBJECT MODULE PLACED IN .\Objects\welcome_Screen.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE welcome_Screen.c BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\welcome_Scre
+                    -en.lst) TABS(2) OBJECT(.\Objects\welcome_Screen.obj)
+
+line level    source
+
+   1          #include "header.h"
+   2          void welcome_screen(void)
+   3          { 
+   4   1        lcd_init();
+   5   1        
+   6   1        lcd_cmd(0x01);
+   7   1        lcd_cmd(0x84);
+   8   1        string_data("WELCOME");
+   9   1        delay_ms(1000);
+  10   1        
+  11   1        lcd_cmd(0x01);
+  12   1        string_data("ELECTRONIC DOOR");
+  13   1        
+  14   1        lcd_cmd(0xC0);
+  15   1        string_data("  LOCK SYSTEM");
+  16   1        delay_ms(1000);
+  17   1        
+  18   1        
+  19   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     64    ----
+   CONSTANT SIZE    =     38    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

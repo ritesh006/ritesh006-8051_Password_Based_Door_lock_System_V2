@@ -1,0 +1,146 @@
+C51 COMPILER V9.52.0.0   MAIN                                                              08/29/2022 18:00:58 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\main.lst) TABS(2) OBJE
+                    -CT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <reg51.h>  /* register address included with header file */
+   2          #include "header.h" /* user defined header file added */
+   3          #include <string.h> /* from this liabrary used string compare function "strcmp" */
+   4          
+   5          sbit buzzer  = P3^7; /* declare buzzer for alarming purpose when user enter wrong password */
+   6          
+   7          sbit trigger = P2^7; 
+   8          /* delcaring trigger pin to trigger the external interrrupt 0 when pin goes high it will trigger to pin 3.
+             -2 */
+   9          
+  10          sbit in1=P3^5;   /* declaring pin for motor driver input IN1 */
+  11          sbit in2=P3^6;   /* declaring pin for motor driver input IN1 */
+  12          
+  13          
+  14          /* ---------------------- Main Starts from Here ------------------------------ */
+  15          
+  16          void main()
+  17          {
+  18   1        
+  19   1        unsigned char master_key[5] = "000"; /* initialise variable to store the master password which can use to
+             - change the password of user */
+  20   1        unsigned char temp = 0;              /* initialise variable to store the key_value of '=' key when its pressed 
+             -*/
+  21   1        signed int count = 0;                /* storing value to check wrong password is equal to three or not */
+  22   1        unsigned char compare_value = 0;     /* storing result of string compare function */     
+  23   1        char x[5]={0};
+  24   1        char d[5]={0};
+  25   1        char b[5]= {0};
+  26   1      
+  27   1        /* extra comment to test */
+  28   1        const unsigned char * a;
+  29   1        signed char user_id;
+  30   1        const unsigned char * read_pass;
+  31   1        
+  32   1        buzzer = 0;
+  33   1        
+  34   1        init_pass_write_user_one();   /* writing password to the eeprom */
+  35   1        init_pass_write_user_two();   /* writing password to the eeprom */
+  36   1        init_pass_write_user_three(); /* writing password to the eeprom */
+  37   1        
+  38   1        
+  39   1        welcome_screen();             /* Calling welcome Screen function */
+  40   1      
+  41   1        initialize_interrupt();       /* initialize the interupts */
+  42   1        
+  43   1      /*---------------------------- While One starts from here -----------------------------------------*/
+  44   1        while(1)
+  45   1        { 
+  46   2          
+  47   2          user_id = taking_id();          /* select id from user */
+  48   2          
+  49   2          read_pass = select_id(user_id); /* select one from three id */
+  50   2          
+  51   2          strcpy(x , read_pass);
+C51 COMPILER V9.52.0.0   MAIN                                                              08/29/2022 18:00:58 PAGE 2   
+
+  52   2          
+  53   2          a = enter_password();
+  54   2          
+  55   2          compare_value = strcmp(a , x); 
+  56   2              
+  57   2         if( compare_value == 0 )
+  58   2        {
+  59   3               
+  60   3              lcd_cmd(0x01);
+  61   3              
+  62   3             string_data(" PASSWORD MATCH");
+  63   3              
+  64   3             lcd_cmd(0xC0);
+  65   3             string_data("  DOOR OPENING");
+  66   3              
+  67   3             door_open();
+  68   3          
+  69   3             delay_ms(2000);
+  70   3               
+  71   3      
+  72   3        }
+  73   2             else if(( compare_value = strcmp( a, master_key)) ==0 )
+  74   2             {
+  75   3              lcd_cmd(0x01);
+  76   3              lcd_cmd(0x80);
+  77   3             string_data("SET YOUR PASSWORD"); 
+  78   3              //delay_ms(4000);
+  79   3              lcd_cmd(0xC0);
+  80   3              string_data("PRESS = KEY");
+  81   3              delay_ms(400);
+  82   3               while(Is_Keypressed());//waiting for sw press
+  83   3               temp=key_Val();
+  84   3               
+  85   3               trigger = 0;
+  86   3               trigger = 1;
+  87   3            
+  88   3               
+  89   3               }
+  90   2           
+  91   2          else
+  92   2          {
+  93   3            lcd_cmd(0x01);
+  94   3            lcd_cmd(0x80);
+  95   3            
+  96   3            string_data("WRONG PASS");  
+  97   3            lcd_cmd(0xC0);
+  98   3            string_data("TRY AGAIN ");
+  99   3            count++;
+ 100   3            lcd_data(count+48);
+ 101   3            buzzer = 1;
+ 102   3              
+ 103   3            door_close();
+ 104   3            
+ 105   3            buzzer = 0;
+ 106   3              
+ 107   3            password_count(count);
+ 108   3            
+ 109   3          }
+ 110   2                
+ 111   2        }
+ 112   1      /*---------------------------- While One Ends here -----------------------------------------*/
+ 113   1      
+C51 COMPILER V9.52.0.0   MAIN                                                              08/29/2022 18:00:58 PAGE 3   
+
+ 114   1      }
+ 115          /* ---------------------- Main Ends Here ------------------------------ */
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    326    ----
+   CONSTANT SIZE    =    103    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      27
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
